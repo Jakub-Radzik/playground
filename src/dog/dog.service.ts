@@ -13,6 +13,7 @@ export class DogService {
   }
 
   findOne(id: number) {
+    throw new Error('This is a test exception');
     return `This action returns a #${id} dog`;
   }
 
@@ -21,6 +22,7 @@ export class DogService {
   }
 
   remove(id: number) {
+    throw new Error('This is a test exception');
     return `This action removes a #${id} dog`;
   }
 }

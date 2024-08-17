@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WsException } from '@nestjs/websockets';
 import { DogService } from './dog.service';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { UpdateDogDto } from './dto/update-dog.dto';
@@ -22,7 +22,11 @@ export class DogGateway {
 
   @SubscribeMessage('findOneDog')
   findOne(@MessageBody() id: number) {
-    return this.dogService.findOne(id);
+    try {
+      return this.dogService.findOne(id);
+    } catch (e) {
+      return new WsException(e.message);
+    }
   }
 
   @SubscribeMessage('updateDog')
@@ -31,7 +35,11 @@ export class DogGateway {
   }
 
   @SubscribeMessage('removeDog')
-  remove(@MessageBody() id: number) {
-    return this.dogService.remove(id);
+  remove(@MessageBody('id') id: number) {
+    try {
+      return this.dogService.remove(id);
+    } catch (error) {
+      return new WsException((error as Error).message);
+    }
   }
 }
